@@ -14,9 +14,12 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    int lineCount = -1;
 
 private slots:
-    void on_pushButton_clicked();
+    void on_Run_clicked();
+
+    void on_Stop_clicked();
 
 private:
     Ui::MainWindow *ui;
