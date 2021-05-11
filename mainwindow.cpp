@@ -2,23 +2,19 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <iostream>
+
 #include <QObject>
 #include <QDebug>
-/**#include <QNetworkAccessManager>
+#include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QAuthenticator>
 #include <QNetworkProxy>
-*/
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkProxy>
-#include <QtNetwork/QNetworkProxy>
 #include <QTextBlock>
 #include <string>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -43,61 +39,62 @@ void MainWindow::on_Run_clicked()
     QTextDocument *doc = editor.document();
     QTextBlock bloque = doc->findBlockByLineNumber(lineCount);
     QString lineatexto = bloque.text();
-    //if (lineatexto[lineatexto.size()]==';' || lineatexto[lineatexto.size()]=='{' || lineatexto[lineatexto.size()]='}')
-    ui->CurrentLine->setText(lineatexto);
-    string lineatextostr = lineatexto.toStdString();
-    string peticion = "{\"line\" : \"" + lineatextostr + "\"}";
+    if (lineatexto != "") {
+        //if (lineatexto[lineatexto.size()]==';' || lineatexto[lineatexto.size()]=='{' || lineatexto[lineatexto.size()]='}')
+        ui->CurrentLine->setText(lineatexto);
 
+        QNetworkAccessManager *mgr = new QNetworkAccessManager(this);
 
-    QNetworkAccessManager *mgr = new QNetworkAccessManager(this);
-    const QUrl url(QStringLiteral("http://localhost:5000/newline"));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        QUrl url = QUrl("http://localhost:5000/newline");
 
+        QJsonObject param;
 
-    QByteArray data(peticion);
-    QNetworkReply *reply = mgr->post(request, data);
+        param.insert("line", QJsonValue::fromVariant(lineatexto));
 
-    QObject::connect(reply, &QNetworkReply::finished, [=](){
-        if(reply->error() == QNetworkReply::NoError){
-            QString contents = QString::fromUtf8(reply->readAll());
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        QNetworkReply* reply = mgr->post(request, QJsonDocument(param).toJson(QJsonDocument::Compact));
 
-            parse json
-            QJsonDocument jsonDoc = QJsonDocument::fromJson(contents.toUtf8());
-            QJsonObject jsonObj = jsonDoc.object();
+        QObject::connect(reply, &QNetworkReply::finished, [=](){
+            if(reply->error() == QNetworkReply::NoError){
+                QString contents = QString::fromUtf8(reply->readAll());
 
-            string tipoMensaje = jsonObj["tipoMensaje"].toString();
-            string mensaje = jsonObj["mensaje"].toString();
+                //parse json
+                QJsonDocument jsonDoc = QJsonDocument::fromJson(contents.toUtf8());
+                QJsonObject jsonObj = jsonDoc.object();
 
-            if (tipoMensaje == "Cout"){
-                ui->Stdout->setText(mensaje);
+                QString tipoMensaje = jsonObj["tipoMensaje"].toString();
+                QString mensaje = jsonObj["mensaje"].toString();
+
+                if (tipoMensaje == "Cout"){
+                    ui->Stdout->setText(mensaje);
+                }
+                else if (tipoMensaje == "Asignacion"){
+                    ui->RamView->append(mensaje);
+
+                }
+
+                else if (tipoMensaje == "Declaracion"){
+                    ui->RamView->append(mensaje);
+
+                }
+
+                else if (tipoMensaje == "Error"){
+                    ui->AppLog->setText(mensaje);
+
+                }
             }
-            else if (tipoMensaje == "Asignacion"){
-                ui->RamView->setText(mensaje);
-
+            else{
+                QString err = reply->errorString();
+                qDebug() << err;
             }
+            reply->deleteLater();
+        });
+    }
 
-            else if (tipoMensaje == "Declaracion"){
-                ui->RamView->append(mensaje);
-
-            }
-
-            else if (tipoMensaje == "Error"){
-                ui->AppLog->setText(mensaje);
-
-            }
-
-        }
-        else{
-            QString err = reply->errorString();
-            qDebug() << err;
-        }
-        reply->deleteLater();
-    });
 }
 
-void MainWindow::on_Stop_clicked()
-{
+void MainWindow::on_Stop_clicked() {
     lineCount = -1;
     ui->RamView->clear();
     ui->CurrentLine->clear();
@@ -109,6 +106,5 @@ void MainWindow::on_Stop_clicked()
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     mgr->get(request);
-
-
 }
+
