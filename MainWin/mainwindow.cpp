@@ -17,6 +17,10 @@
 
 using namespace std;
 
+QTextEdit editor;
+QStringList comparacionRAM;
+QStringList comparacionCode;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -40,7 +44,7 @@ void MainWindow::on_Run_clicked()
     QTextBlock bloque = doc->findBlockByLineNumber(lineCount);
     QString lineatexto = bloque.text();
     if (lineatexto != "") {
-        //if (lineatexto[lineatexto.size()]==';' || lineatexto[lineatexto.size()]=='{' || lineatexto[lineatexto.size()]='}')
+
         ui->CurrentLine->setText(lineatexto);
 
         QNetworkAccessManager *mgr = new QNetworkAccessManager(this);
@@ -70,8 +74,8 @@ void MainWindow::on_Run_clicked()
                     ui->Stdout->setText(mensaje);
                 }
                 else if (tipoMensaje == "Asignacion"){
+                    QList probando = new Q
                     ui->RamView->append(mensaje);
-
                 }
 
                 else if (tipoMensaje == "Declaracion"){
