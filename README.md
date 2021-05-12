@@ -11,3 +11,6 @@
   * En el cuadro combinado de **"Kits"** seleccione Escritorio(por defecto).Luego, desplácese hacia abajo hasta el botón para seleccionar la versión Qt y enumere hacia abajo para   seleccionar la versión que acaba de agregar.
 3) Si a la hora de correr el codigo tira muchos errores vaya a **"Ayuda>Acerca de los plugins..."** y desactive el **Clang Base Model**, reinicie Qt-Creator.
 4) En caso de que a la hora de descargar el codigo y probarlo le tire una alerta sobre incompatibilidad borre los archivos que contengan **.pro.user.xxxx** dentro del nombre e intente de nuevo
+
+### Funcionalidad del Codigo
+Se utiliza el boton **"Run"** para correr el codigo linea por linea y el boton **"Stop"** se utiliza para devolverse hasta la primera linea y empezar desde nuevo, para cerrar la aplicacion se debe de dar primero al **"Stop"** y luego se puede salir del IDE.
