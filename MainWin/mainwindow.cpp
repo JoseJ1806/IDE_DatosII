@@ -74,7 +74,6 @@ void MainWindow::on_Run_clicked()
                     ui->Stdout->setText(mensaje);
                 }
                 else if (tipoMensaje == "Asignacion"){
-                    QList probando = new Q
                     ui->RamView->append(mensaje);
                 }
 
