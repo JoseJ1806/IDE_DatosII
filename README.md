@@ -13,4 +13,4 @@
 4) En caso de que a la hora de descargar el codigo y probarlo le tire una alerta sobre incompatibilidad borre los archivos que contengan **.pro.user.xxxx** dentro del nombre e intente de nuevo
 
 ### Funcionalidad del Codigo
-Se utiliza el boton **"Run"** para correr el codigo linea por linea y el boton **"Stop"** se utiliza para devolverse hasta la primera linea y empezar desde nuevo, para cerrar la aplicacion se debe de dar primero al **"Stop"** y luego se puede salir del IDE.
+Se utiliza el boton **"Run"** para correr el codigo linea por linea y el boton **"Go Back"** se utiliza para devolverse hasta la primera linea y empezar desde nuevo, para cerrar la aplicacion se debe de dar primero al **"Go Back"** y luego se puede salir del IDE.
